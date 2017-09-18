@@ -7,37 +7,91 @@
       </div>
     </div>
     <div class="row">
-      <nav class="col-sm-4" style="background-color: aliceblue">
-        <h3>Movie Lists</h3>
+      <nav class="col-sm-4 card" style="background-color: aliceblue">
+        <h3 class="m-4">Movie Lists</h3>
         <div *ngIf="count > 0">
-          <ul>
-            <li *ngFor="let list of objectKeys(mockLists)" (click)="showList(list)">
-              {{list}} - {{mockLists[list].length}} movies ({{averageRating(list) | number:0}} stars)
-            </li>
+          <ul class="list-group">
+            <li class="list-group-item"
+                *ngFor="let list of objectKeys(mockLists)" (click)="showList(list)">
+              {{list}}({{mockLists[list].length}})
+              <span class="badge badge-warning">{{averageRating(list) | number:0}}</span>
           </ul>
         </div>
         <div *ngIf="count == 0">
           Currently no lists
         </div>
-        <button (click)="createList()">Create a list</button>
+        <button (click)="createList()" class="btn btn-primary m-4">Create a list</button>
       </nav>
+
       <main class="col-sm-8">
-        <input type="text" placeholder="Search IMDB"/>
-        <div *ngIf="selectedList && !isCreateList">
-          <h3>{{selectedList}}</h3>
-          <div *ngFor="let selected of mockLists[selectedList]">
-            <h5>Title: {{selected.name}}</h5>
-            <h5>Rating: {{selected.rating}}</h5>
-          </div>
+        <div *ngIf="!selectedList && !isCreateList">
+          <input type="text" placeholder="Search IMDB" class="form-control"/>
         </div>
 
-        <div *ngIf="isCreateList">
-          <input type="text" placeholder="List Title" />
-          <label>Rating (1-5):</label> <input type="number" min="1" max="5" />
+        <div *ngIf="selectedList">
+          <h3>{{selectedList}}</h3>
+          <table class="table">
+            <thead>
+            <tr>
+              <th>Title</th>
+              <th>Rating</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let selected of mockLists[selectedList]">
+
+              <td>{{selected.name}}</td>
+              <td>{{selected.rating}}</td>
+            </tr>
+            </tbody>
+          </table>
         </div>
+
+        <div *ngIf="isCreateList && !selectedList">
+          <h3>Create List</h3>
+          <form #listfForm="ngForm" (ngSubmit)="listSubmit(listfForm.value)" novalidate>
+            <div class="form-group">
+              <input type="text"
+                     placeholder="List Title"
+                     id="listTitle"
+                     class="form-control"
+                     required
+                     ngModel
+                     name="listTitle"/>
+            </div>
+
+            <h5>Add Movie(s) *Optional</h5>
+            <div class="input-group">
+              <input type="text"
+                     placeholder="Movie Title"
+                     class="form-control"
+                     id="movieTitle"
+                     ngModel
+                     name="movieTitle"/>
+
+              <div class="input-group-addon">Rating</div>
+              <input type="number"
+                     class="form-control"
+                     min="1"
+                     max="5"
+                     id="movieRating"
+                     ngModel
+                     name="movieRating"/>
+            </div>
+              <movie></movie>
+
+            <div class="text-right m-2">
+              <button type="button" class="btn btn-outline-primary" (click)="addMovie()">Add Movie</button>
+            </div>
+            <hr>
+            <button type="submit" class="btn btn-success">Submit</button>
+          </form>
+        </div>
+
       </main>
     </div>
   </div>
 </ng-container>
+
 </body>
 

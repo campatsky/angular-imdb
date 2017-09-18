@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -10,49 +9,37 @@ export class AppComponent {
   title = 'My Movie Lists';
   selectedList;
   isCreateList = false;
+  listForm;
+
+
 
   mockLists = {
-    "list 1": [
+    "Example List": [
       {
-        name: "movie 1",
+        name: "The Dark Knight",
         rating: 4
       },
       {
-        name: "movie 2",
+        name: "Citizen Kane",
         rating: 3
       },
       {
-        name: "movie 3",
-        rating: 3
-      }
-    ],
-    "list 2": [
-      {
-        name: "movie 4",
-        rating: 4
-      },
-      {
-        name: "movie 5",
-        rating: 3
-      }
-    ],
-    "list 3": [
-      {
-        name: "movie 7",
-        rating: 3
-      },
-      {
-        name: "movie 8",
-        rating: 3
-      },
-      {
-        name: "movie 9",
+        name: "The Godfather",
         rating: 3
       }
     ]
   };
-
   count = Object.keys(this.mockLists).length;
+
+  /*ngOnInit() {
+    let mockList = new List();
+    mockList.title = "Example List";
+    let mockMovie = new Movie();
+    mockMovie.name = "movie name";
+    mockMovie.rating = 2;
+    mockList.movies.push(mockMovie);
+    console.log(mockList);
+  }*/
 
   showList(list) {
     this.selectedList = list;
@@ -60,14 +47,13 @@ export class AppComponent {
 
   averageRating(list) {
     let movies = this.mockLists[list];
-    console.log(movies);
     let totalRatings = 0;
 
     for (let i of movies) {
       totalRatings = totalRatings + i.rating;
     }
 
-   return totalRatings/movies.length;
+    return totalRatings / movies.length || 0;
   }
 
   objectKeys(obj) {
@@ -76,5 +62,40 @@ export class AppComponent {
 
   createList() {
     this.isCreateList = true;
+    this.selectedList = "";
+  }
+
+  addMovie() {
+    console.log(this.listForm);
+  }
+
+  listSubmit(list) {
+    console.log(list);
+    let title = list.listTitle;
+    if (title != undefined) {
+      let movie = new Movie();
+
+      if (list.movieTitle != undefined) {
+        movie.name = list.movieTitle;
+        console.log("movie", list.movieTitle, list);
+      }
+      if (list.movieRating != undefined) {
+        movie.rating = list.movieRating;
+      }
+      this.mockLists[title]= [movie];
+    }
+
+    this.isCreateList = false;
   }
 }
+
+export class Movie {
+  name: string;
+  rating: number;
+}
+
+export class List {
+  title: string;
+  movies: Array<Movie>
+}
+
